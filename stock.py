@@ -11,6 +11,7 @@ alpha_vantage_key = 'BWH9ST7QEJE1LRQ7'
 alpha_vantage_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={}&interval={}min&outputsize=compact&apikey={}'
 
 def get_data(ticker, dataset='WIKI', start_date='', end_date=''):
+    ticker = ticker.upper()
     try:
         dataset = quandl.Dataset('{}/{}'.format(dataset, ticker))
         df = dataset.data(params={ 'start_date': start_date, 'end_date': end_date}).to_pandas()
@@ -49,3 +50,7 @@ def get_intraday(ticker, interval=5):
         times.append(current)
         prices.append(costs['1. open'])
     return times, prices
+
+def get_price_change(ticker):
+    _, prices = get_intraday('AAPL', 15)
+    return (float(prices[-1]) - float(prices[0])) / float(prices[0])
